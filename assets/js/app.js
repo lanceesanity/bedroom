@@ -70,10 +70,10 @@ let Colors = {
   
   function createLights() {
   
-  hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .4)
+  hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .3)
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
   ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-  shadowLight.position.set(-2500, 600, 1);
+  shadowLight.position.set(2500, 600, 1);
   shadowLight.castShadow = true;
   shadowLight.shadow.camera.left = -400;
   shadowLight.shadow.camera.right = 400;
@@ -138,7 +138,7 @@ let Colors = {
   // Create window
   const geomWindow= new THREE.BoxGeometry(1000,1000,100,1,1,1);
   let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window2.jpg' );
-  let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureWindow, transparent:true,opacity:5});
+  let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading,transparent:true,opacity:5,map:textureWindow});
   this.window = new THREE.Mesh(geomWindow, matWindow);
   this.window.position.set(50,0,1000);
   this.window.rotation.y= 11;
@@ -196,11 +196,11 @@ let Colors = {
   this.mesh.add(dresser);
 
   // Create bed
-  const geomBed= new THREE.BoxGeometry(1000,1000,100,1,1,1);
+  const geomBed= new THREE.BoxGeometry(2000,1000,100,1,1,1);
   let textureBed= new THREE.TextureLoader().load( 'assets/textures/bed.jpg' );
   let matBed = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureBed});
   let bed = new THREE.Mesh(geomBed, matBed);
-  bed.position.set(1200,-270,500);
+  bed.position.set(1500,-300,0);
   bed.rotation.x =11;
   bed.castShadow = true;
   bed.receiveShadow = true;
