@@ -27,6 +27,7 @@ let Colors = {
   fieldOfView = 100;
   nearPlane = 1;
   farPlane = 10000;
+  
   camera = new THREE.PerspectiveCamera(
     fieldOfView,
     aspectRatio,
@@ -34,7 +35,7 @@ let Colors = {
     farPlane
     );
   
-  scene.fog = new THREE.Fog(0xf7d9aa, 100,950);
+  // scene.fog = new THREE.Fog(0xd8d0d1, 100,950);
 
   camera.position.x = 100;
   //adjust position of charaacter
@@ -47,6 +48,7 @@ let Colors = {
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(WIDTH, HEIGHT);
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type=THREE.BasicShadowMap;
   container = document.getElementById('world');
   container.appendChild(renderer.domElement);
   
@@ -70,23 +72,23 @@ let Colors = {
   
   function createLights() {
   
-  hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .3)
+  hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-  ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-  shadowLight.position.set(10, 2000, 5000);
+  ambientLight = new THREE.AmbientLight( 0x404040, 0.9); // soft white light
+  pointLight = new THREE.PointLight(0xffffff, 1,100);
+
+  pointLight.position.set(-10,600,-1800);
+  pointLight.castShadow = true;
+  pointLight.shadow.camera.near = 1;
+  pointLight.shadow.camera.far = 1000;
+  
+  shadowLight.position.set(-10, 600, -1800);
   shadowLight.castShadow = true;
-  shadowLight.shadow.camera.left = -400;
-  shadowLight.shadow.camera.right = 400;
-  shadowLight.shadow.camera.top = 400;
-  shadowLight.shadow.camera.bottom = -400;
-  shadowLight.shadow.camera.near = 1;
-  shadowLight.shadow.camera.far = 1;
-  shadowLight.shadow.mapSize.width = 2048;
-  shadowLight.shadow.mapSize.height = 2048;
   
   scene.add(hemisphereLight);
   scene.add(shadowLight);
   scene.add(ambientLight);
+  scene.add(pointLight);
   }
   
   
@@ -136,27 +138,27 @@ let Colors = {
 
 
   // Create window
-  const geomWindow= new THREE.BoxGeometry(1000,1000,100,1,1,1);
+  const geomWindow= new THREE.BoxGeometry(1000,1000,200,1,1,1);
   let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window4.png' );
   let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading,transparent:true,opacity:5,map:textureWindow});
   this.window = new THREE.Mesh(geomWindow, matWindow);
-  this.window.position.set(50,0,1000);
+  this.window.position.set(-10,0,1200);
   this.window.rotation.y= 11;
   this.window.castShadow = true;
   this.window.receiveShadow = true;
 
    // Create door
-  const geomDoor= new THREE.BoxGeometry(1000,1500,100,1,1,1);
+  const geomDoor= new THREE.BoxGeometry(1000,1500,200,1,1,1);
   let textureDoor= new THREE.TextureLoader().load( 'assets/textures/door3.png' );
-  let matDoor = new THREE.MeshLambertMaterial({shading:THREE.FlatShading, map:textureDoor,transparent:true});
+  let matDoor = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureDoor,transparent:true});
   this.door = new THREE.Mesh(geomDoor, matDoor);
-  this.door.position.set(100,-200,-400);
+  this.door.position.set(-10,-200,-1000);
   this.door.rotation.y = 11;
   this.door.castShadow = true;
   this.door.receiveShadow = true;
 
   // Create the 3rd main wall
-  const geomWall3= new THREE.BoxGeometry(10,2000,5000,1,1,1);
+  const geomWall3= new THREE.BoxGeometry(100,2000,5000,1,1,1);
   let textureWall3 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
   let matWall3 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureWall3,transparent:true});
   this.wall3 = new THREE.Mesh(geomWall3, matWall3);
@@ -186,7 +188,7 @@ let Colors = {
   
   // Create dresser
   const geomDresser= new THREE.BoxGeometry(400,800,800,1,1,1);
-  let textureDresser= new THREE.TextureLoader().load( 'assets/textures/drawer.jpg' );
+  let textureDresser= new THREE.TextureLoader().load( 'assets/textures/planks.png' );
   let matDresser = new THREE.MeshLambertMaterial({shading:THREE.FlatShading, map:textureDresser});
   let dresser = new THREE.Mesh(geomDresser, matDresser);
   dresser.position.set(50,0,1000);
@@ -196,15 +198,26 @@ let Colors = {
   this.mesh.add(dresser);
 
   // Create bed
-  const geomBed= new THREE.BoxGeometry(2000,1000,100,1,1,1);
-  let textureBed= new THREE.TextureLoader().load( 'assets/textures/bed.jpg' );
+  const geomBed= new THREE.BoxGeometry(1500,1000,100,1,1,1);
+  let textureBed= new THREE.TextureLoader().load( 'assets/textures/wool.png' );
   let matBed = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureBed});
   let bed = new THREE.Mesh(geomBed, matBed);
-  bed.position.set(1500,-300,0);
+  bed.position.set(-1500,-200,0);
   bed.rotation.x =11;
   bed.castShadow = true;
   bed.receiveShadow = true;
   this.mesh.add(bed);
+
+  // Create bed holder
+  const geomHolder= new THREE.BoxGeometry(2000,1500,100,1,1,1);
+  let textureHolder= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
+  let matHolder = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureHolder});
+  let holder = new THREE.Mesh(geomHolder, matHolder);
+  holder.position.set(-1500,-300,0);
+  holder.rotation.x =11;
+  holder.castShadow = true;
+  holder.receiveShadow = true;
+  this.mesh.add(holder);
 
   
 
@@ -215,7 +228,7 @@ let Colors = {
   
   
   Sea = function(){
-  let geomSea = new THREE.PlaneGeometry(5000,5000,5000);
+  let geomSea = new THREE.PlaneGeometry(10000,10000,5000);
   geomSea.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
   let textureSea = new THREE.TextureLoader().load( 'assets/textures/water.jpg' );
   let matSea = new THREE.MeshPhongMaterial({
