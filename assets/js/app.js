@@ -73,7 +73,7 @@ let Colors = {
   hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .3)
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
   ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-  shadowLight.position.set(2500, 600, 1);
+  shadowLight.position.set(10, 2000, 5000);
   shadowLight.castShadow = true;
   shadowLight.shadow.camera.left = -400;
   shadowLight.shadow.camera.right = 400;
@@ -137,7 +137,7 @@ let Colors = {
 
   // Create window
   const geomWindow= new THREE.BoxGeometry(1000,1000,100,1,1,1);
-  let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window2.jpg' );
+  let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window4.png' );
   let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading,transparent:true,opacity:5,map:textureWindow});
   this.window = new THREE.Mesh(geomWindow, matWindow);
   this.window.position.set(50,0,1000);
@@ -147,18 +147,18 @@ let Colors = {
 
    // Create door
   const geomDoor= new THREE.BoxGeometry(1000,1500,100,1,1,1);
-  let textureDoor= new THREE.TextureLoader().load( 'assets/textures/door2.jpg' );
-  let matDoor = new THREE.MeshLambertMaterial({shading:THREE.FlatShading, map:textureDoor});
+  let textureDoor= new THREE.TextureLoader().load( 'assets/textures/door3.png' );
+  let matDoor = new THREE.MeshLambertMaterial({shading:THREE.FlatShading, map:textureDoor,transparent:true});
   this.door = new THREE.Mesh(geomDoor, matDoor);
-  this.door.position.set(100,-200,-200);
+  this.door.position.set(100,-200,-400);
   this.door.rotation.y = 11;
   this.door.castShadow = true;
   this.door.receiveShadow = true;
 
   // Create the 3rd main wall
-  const geomWall3= new THREE.BoxGeometry(100,2000,5000,1,1,1);
+  const geomWall3= new THREE.BoxGeometry(10,2000,5000,1,1,1);
   let textureWall3 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
-  let matWall3 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureWall3});
+  let matWall3 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureWall3,transparent:true});
   this.wall3 = new THREE.Mesh(geomWall3, matWall3);
   this.wall3.position.x = -10;
   this.wall3.position.y = 600;
@@ -255,7 +255,7 @@ let Colors = {
   renderer.render(scene, camera);
   
   requestAnimationFrame(loop);
-  //to rotate the scene
+  
 
   }
   
