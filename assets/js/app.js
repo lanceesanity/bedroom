@@ -24,7 +24,7 @@ let Colors = {
   
   scene = new THREE.Scene();
   aspectRatio = WIDTH / HEIGHT;
-  fieldOfView = 100;
+  fieldOfView = 105;
   nearPlane = 1;
   farPlane = 10000;
   
@@ -35,7 +35,7 @@ let Colors = {
     farPlane
     );
   
-  // scene.fog = new THREE.Fog(0xd8d0d1, 100,950);
+  // scene.fog = new THREE.Fog(0x404040, 100,950);
 
   camera.position.x = 100;
   //adjust position of charaacter
@@ -80,7 +80,7 @@ let Colors = {
   pointLight.position.set(-10,600,-1800);
   pointLight.castShadow = true;
   pointLight.shadow.camera.near = 1;
-  pointLight.shadow.camera.far = 1000;
+  pointLight.shadow.camera.far = 20000;
   
   shadowLight.position.set(-10, 600, -1800);
   shadowLight.castShadow = true;
@@ -92,8 +92,10 @@ let Colors = {
   }
   
   
-  var Room = function(){
+  let Room = function(){
   this.mesh = new THREE.Object3D();
+  this.mesh.receiveShadow = true;
+  this.mesh.castShadow=true;
   this.mesh.name = "Room";
   controls = new THREE.OrbitControls (camera, renderer.domElement);
 
@@ -209,9 +211,9 @@ let Colors = {
   this.mesh.add(bed);
 
   // Create bed holder
-  const geomHolder= new THREE.BoxGeometry(2000,1500,100,1,1,1);
+  const geomHolder= new THREE.BoxGeometry(1700,1000,100,1,1,1);
   let textureHolder= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
-  let matHolder = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureHolder});
+  let matHolder = new THREE.MeshStandardMaterial({shading:THREE.FlatShading, map:textureHolder});
   let holder = new THREE.Mesh(geomHolder, matHolder);
   holder.position.set(-1500,-300,0);
   holder.rotation.x =11;
@@ -227,28 +229,23 @@ let Colors = {
   };
   
   
-  Sea = function(){
-  let geomSea = new THREE.PlaneGeometry(10000,10000,5000);
-  geomSea.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
-  let textureSea = new THREE.TextureLoader().load( 'assets/textures/water.jpg' );
-  let matSea = new THREE.MeshPhongMaterial({
+  Grass = function(){
+  let geomGrass = new THREE.PlaneGeometry(10000,10000,5000);
+  geomGrass.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
+  let textureGrass = new THREE.TextureLoader().load( 'assets/textures/grass.png' );
+  let matGrass = new THREE.MeshPhongMaterial({
     color:Colors.blue,
-    transparent:true,
-    opacity:.6,
+    // transparent:true,
+    // opacity:.6,
     shading:THREE.FlatShading,
-    map: textureSea
+    map: textureGrass
   });
-  this.mesh = new THREE.Mesh(geomSea, matSea);
+  this.mesh = new THREE.Mesh(geomGrass, matGrass);
   this.mesh.receiveShadow = true;
   }
-  
-  
-  
-  
-  
-  
+   
   // 3D Models
-  let sea;
+  let grass;
   let room;
   
   function createRoom(){
@@ -258,18 +255,16 @@ let Colors = {
   scene.add(room.mesh);
   }
   
-  function createSea(){
-  sea = new Sea();
-  scene.add(sea.mesh);
+  function createGrass(){
+  grass = new Grass();
+  scene.add(grass.mesh);
   }
   
   function loop(){
   controls.update();
   renderer.render(scene, camera);
-  
+  renderer.shadowMapEnabled=true;
   requestAnimationFrame(loop);
-  
-
   }
   
   
@@ -277,7 +272,7 @@ let Colors = {
   createScene();
   createLights();
   createRoom();
-  createSea();
+  createGrass();
   loop();
   }
   
