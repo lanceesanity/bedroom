@@ -24,7 +24,7 @@ let Colors = {
   
   scene = new THREE.Scene();
   aspectRatio = WIDTH / HEIGHT;
-  fieldOfView = 105;
+  fieldOfView = 100;
   nearPlane = 1;
   farPlane = 10000;
   
@@ -35,13 +35,13 @@ let Colors = {
     farPlane
     );
   
-  // scene.fog = new THREE.Fog(0x404040, 100,950);
+    // scene.fog = new THREE.Fog(0xf7d9aa, 100,950);
 
   camera.position.x = 100;
   //adjust position of charaacter
   camera.position.z = 200;
   
-  camera.position.y = 200;
+  camera.position.y = 400;
   camera.rotation.y =0.1;
   
   
@@ -74,7 +74,7 @@ let Colors = {
   
   hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-  ambientLight = new THREE.AmbientLight( 0x404040, 0.9); // soft white light
+  ambientLight = new THREE.AmbientLight( 0x404040, 0.99); // soft white light
   pointLight = new THREE.PointLight(0xffffff, 1,100);
 
   pointLight.position.set(-10,600,-1800);
@@ -84,6 +84,14 @@ let Colors = {
   
   shadowLight.position.set(-10, 600, -1800);
   shadowLight.castShadow = true;
+  shadowLight.shadow.camera.left = -800;
+  shadowLight.shadow.camera.right = 800;
+  shadowLight.shadow.camera.top = 800;
+  shadowLight.shadow.camera.bottom = -800;
+  shadowLight.shadow.camera.near = 1;
+  shadowLight.shadow.camera.far = 10000;
+  shadowLight.shadow.mapSize.width = 2048;
+  shadowLight.shadow.mapSize.height = 2048;
   
   scene.add(hemisphereLight);
   scene.add(shadowLight);
@@ -263,7 +271,6 @@ let Colors = {
   function loop(){
   controls.update();
   renderer.render(scene, camera);
-  renderer.shadowMapEnabled=true;
   requestAnimationFrame(loop);
   }
   
