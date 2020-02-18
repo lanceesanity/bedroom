@@ -15,7 +15,7 @@ let Colors = {
     renderer, container;
   
   
-  //INIT THREE JS, SCREEN AND MOUSE EVENTS
+  //INIT THREE JS, SCREEN
   
   function createScene() {
   
@@ -74,7 +74,7 @@ let Colors = {
   
   hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-  ambientLight = new THREE.AmbientLight( 0x404040, 0.99); // soft white light
+  ambientLight = new THREE.AmbientLight( 0xffffff, 0.6); // soft white light
   pointLight = new THREE.PointLight(0xffffff, 1,100);
 
   pointLight.position.set(-10,600,-1800);
@@ -84,10 +84,12 @@ let Colors = {
   
   shadowLight.position.set(-10, 600, -1800);
   shadowLight.castShadow = true;
+  
   shadowLight.shadow.camera.left = -800;
   shadowLight.shadow.camera.right = 800;
   shadowLight.shadow.camera.top = 800;
   shadowLight.shadow.camera.bottom = -800;
+
   shadowLight.shadow.camera.near = 1;
   shadowLight.shadow.camera.far = 10000;
   shadowLight.shadow.mapSize.width = 2048;
@@ -120,7 +122,16 @@ let Colors = {
   building.receiveShadow = true;
   this.mesh.add(building);
   
-  
+  //create roof
+  const geomRoof= new THREE.BoxGeometry(5000,500,2500,1,1,1);
+  let textureRoof= new THREE.TextureLoader().load( 'assets/textures/roof.png' );
+  let matRoof = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureRoof});
+  let roof = new THREE.Mesh(geomRoof, matRoof);
+  roof.position.set(-1,1850 ,-1);
+  roof.castShadow = true;
+  roof.receiveShadow = true;
+  this.mesh.add(roof);
+
   // Create the main wall
   const geomWall= new THREE.BoxGeometry(100,2000,2500,1,1,1);
   //texture for main wall
@@ -147,41 +158,100 @@ let Colors = {
   this.mesh.add(wall2);
 
 
-  // Create window
-  const geomWindow= new THREE.BoxGeometry(1000,1000,200,1,1,1);
-  let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window4.png' );
-  let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading,transparent:true,opacity:5,map:textureWindow});
+  // Create window transparent:true,opacity:.9
+  const geomWindow= new THREE.BoxGeometry(800,1000,20,1,1,1);
+  let textureWindow= new THREE.TextureLoader().load( 'assets/textures/window.png' );
+  let matWindow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading,transparent:true,opacity:.9,map:textureWindow});
   this.window = new THREE.Mesh(geomWindow, matWindow);
-  this.window.position.set(-10,0,1200);
-  this.window.rotation.y= 11;
+
+  this.window.position.set(-200,-680,1250);
+  this.window.rotation.y= -0.9;
   this.window.castShadow = true;
   this.window.receiveShadow = true;
+
+  this.window2 = new THREE.Mesh(geomWindow, matWindow);
+  this.window2.position.set(-250,-680,2750);
+  this.window2.rotation.y= 0.9;
+  this.window2.castShadow = true;
+  this.window2.receiveShadow = true;
+
+  this.window3 = new THREE.Mesh(geomWindow, matWindow);
+  this.window3.position.set(-250,-680,-1250);
+  this.window3.rotation.y= 0.9;
+  this.window3.castShadow = true;
+  this.window3.receiveShadow = true;
+
+  this.window4 = new THREE.Mesh(geomWindow, matWindow);
+  this.window4.position.set(-200,-680,-2750);
+  this.window4.rotation.y= -0.9;
+  this.window4.castShadow = true;
+  this.window4.receiveShadow = true;
 
    // Create door
   const geomDoor= new THREE.BoxGeometry(1000,1500,200,1,1,1);
   let textureDoor= new THREE.TextureLoader().load( 'assets/textures/door3.png' );
   let matDoor = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureDoor,transparent:true});
   this.door = new THREE.Mesh(geomDoor, matDoor);
-  this.door.position.set(-10,-200,-1000);
+  this.door.position.set(-10,-1000 ,-1);
   this.door.rotation.y = 11;
   this.door.castShadow = true;
   this.door.receiveShadow = true;
 
   // Create the 3rd main wall
-  const geomWall3= new THREE.BoxGeometry(100,2000,5000,1,1,1);
+  const geomWall3= new THREE.BoxGeometry(100,500,5000,1,1,1);
   let textureWall3 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
   let matWall3 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureWall3,transparent:true});
   this.wall3 = new THREE.Mesh(geomWall3, matWall3);
   this.wall3.position.x = -10;
-  this.wall3.position.y = 600;
+  this.wall3.position.y = 1350;
   this.wall3.position.z =- 1200;
   this.wall3.rotation.y = 11;
   this.wall3.castShadow = true;
   this.wall3.receiveShadow = true;
-  this.wall3.add(this.window);
   this.wall3.add(this.door);
+  this.wall3.add(this.window);
+  this.wall3.add(this.window2);
+  this.wall3.add(this.window3);
+  this.wall3.add(this.window4);
   this.mesh.add(this.wall3);
   
+  //create subwall 1
+  const subWall1= new THREE.BoxGeometry(100,800,5000,1,1,1);
+  let texturesubWall1 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
+  let matsubWall1 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:texturesubWall1,transparent:true});
+  let subwall1 = new THREE.Mesh(subWall1, matsubWall1);
+  subwall1.position.x = -10;
+  subwall1.position.y = -100;
+  subwall1.position.z =- 1200;
+  subwall1.rotation.y = 11;
+  subwall1.castShadow = true;
+  subwall1.receiveShadow = true;
+  this.mesh.add(subwall1);
+  //create subwall 2
+  const subWall2= new THREE.BoxGeometry(100,800,1000,1,1,1);
+  let texturesubWall2 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
+  let matsubWall2 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:texturesubWall2,transparent:true});
+  let subwall2 = new THREE.Mesh(subWall2, matsubWall2);
+  subwall2.position.x = -1000;
+  subwall2.position.y = 700;
+  subwall2.position.z =- 1200;
+  subwall2.rotation.y =  11;
+  subwall2.castShadow = true;
+  subwall2.receiveShadow = true;
+  this.mesh.add(subwall2);
+  //create subwall 2
+  const subWall3= new THREE.BoxGeometry(100,800,1000,1,1,1);
+  let texturesubWall3 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
+  let matsubWall3 = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:texturesubWall3,transparent:true});
+  let subwall3 = new THREE.Mesh(subWall3, matsubWall3);
+  subwall3.position.x = 1000;
+  subwall3.position.y = 700;
+  subwall3.position.z =- 1200;
+  subwall3.rotation.y =  11;
+  subwall3.castShadow = true;
+  subwall3.receiveShadow = true;
+  this.mesh.add(subwall3);
+
   // Create the 4th main wall
   const geomWall4= new THREE.BoxGeometry(100,2000,5000,1,1,1);
   let textureWall4 = new THREE.TextureLoader().load( 'assets/textures/wood2.jpg' );
@@ -217,7 +287,27 @@ let Colors = {
   bed.castShadow = true;
   bed.receiveShadow = true;
   this.mesh.add(bed);
+  //create pillow
+  const geomPillow= new THREE.BoxGeometry(200,1000,100,1,1,1);
+  let texturePillow= new THREE.TextureLoader().load( 'assets/textures/wool.png' );
+  let matPillow = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:texturePillow});
+  let pillow = new THREE.Mesh(geomPillow, matPillow);
+  pillow.position.set(-2100,-100,0);
+  pillow.rotation.x =11;
+  pillow.castShadow = true;
+  pillow.receiveShadow = true;
+  this.mesh.add(pillow);
 
+  //create blanket
+  const geomBlanket= new THREE.BoxGeometry(900,1000,10,1,1,1);
+  let textureBlanket= new THREE.TextureLoader().load( 'assets/textures/gray.jpg' );
+  let matBlanket = new THREE.MeshPhongMaterial({shading:THREE.FlatShading, map:textureBlanket});
+  let blanket = new THREE.Mesh(geomBlanket, matBlanket);
+  blanket.position.set(-1300,-120,0);
+  blanket.rotation.x =11;
+  blanket.castShadow = true;
+  blanket.receiveShadow = true;
+  this.mesh.add(blanket);
   // Create bed holder
   const geomHolder= new THREE.BoxGeometry(1700,1000,100,1,1,1);
   let textureHolder= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
@@ -229,7 +319,80 @@ let Colors = {
   holder.receiveShadow = true;
   this.mesh.add(holder);
 
+  // Create tv
+  const geomTv= new THREE.BoxGeometry(1500,700,70,1,1,1);
+  let textureTv= new THREE.TextureLoader().load( 'assets/textures/tv.png' );
+  let matTv = new THREE.MeshStandardMaterial({shading:THREE.FlatShading, map:textureTv});
+  let tv = new THREE.Mesh(geomTv, matTv);
+  tv.rotation.y=11;
+  tv.position.set(2400,600,0);
+  tv.castShadow = true;
+  tv.receiveShadow = true;
+  this.mesh.add(tv);
+
+  // Create tv box
+  const geomBox= new THREE.BoxGeometry(1500,100,70,1,1,1);
+  let textureBox= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
+  let matBox = new THREE.MeshStandardMaterial({shading:THREE.FlatShading, map:textureBox});
+  let box = new THREE.Mesh(geomBox, matBox);
+  box.rotation.y=11;
+  box.position.set(2400,1000,0);
+  box.castShadow = true;
+  box.receiveShadow = true;
+  this.mesh.add(box);
+
+  let box2 = new THREE.Mesh(geomBox, matBox);
+  box2.rotation.y=11;
+  box2.position.set(2400,200,0);
+  box2.castShadow = true;
+  box2.receiveShadow = true;
+  this.mesh.add(box2);
+
   
+  // Create table
+  const geomTable= new THREE.BoxGeometry(1000,1000,70,1,1,1);
+  let textureTable= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
+  let matTable = new THREE.MeshStandardMaterial({shading:THREE.FlatShading, map:textureTable});
+  let table = new THREE.Mesh(geomTable, matTable);
+  table.position.set(1500,1,0);
+  table.rotation.x =11;
+  table.castShadow = true;
+  table.receiveShadow = true;
+  this.mesh.add(table);
+
+  // Create table leg
+  const geomTableLeg= new THREE.BoxGeometry(100,50,400,1,1,1);
+  let textureTableLeg= new THREE.TextureLoader().load( 'assets/textures/wood.png' );
+  let matTableLeg = new THREE.MeshStandardMaterial({shading:THREE.FlatShading, map:textureTableLeg});
+  let tableLeg = new THREE.Mesh(geomTableLeg, matTableLeg);
+  tableLeg.position.set(1800,-200,400);
+  tableLeg.rotation.x =11;
+  tableLeg.castShadow = true;
+  tableLeg.receiveShadow = true;
+  this.mesh.add(tableLeg);
+
+
+  let tableLeg2 = new THREE.Mesh(geomTableLeg, matTableLeg);
+  tableLeg2.position.set(1800,-200,-400);
+  tableLeg2.rotation.x =11;
+  tableLeg2.castShadow = true;
+  tableLeg2.receiveShadow = true;
+  this.mesh.add(tableLeg2);
+  
+
+  let tableLeg3 = new THREE.Mesh(geomTableLeg, matTableLeg);
+  tableLeg3.position.set(1200,-200,400);
+  tableLeg3.rotation.x =11;
+  tableLeg3.castShadow = true;
+  tableLeg3.receiveShadow = true;
+  this.mesh.add(tableLeg3);
+
+  let tableLeg4 = new THREE.Mesh(geomTableLeg, matTableLeg);
+  tableLeg4.position.set(1200,-200,-400);
+  tableLeg4.rotation.x =11;
+  tableLeg4.castShadow = true;
+  tableLeg4.receiveShadow = true;
+  this.mesh.add(tableLeg4);
 
   //sky
   let skyTexture= new THREE.TextureLoader().load( 'assets/textures/water.jpg' );
